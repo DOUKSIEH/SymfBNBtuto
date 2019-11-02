@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,14 +18,15 @@ class Image
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Url()
      */
     private $url;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=10, minMessage="Le titre de l'image doit faire au moins 10 caractères")
      */
     private $caption;
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Ad", inversedBy="images")
      * @ORM\JoinColumn(nullable=false)
