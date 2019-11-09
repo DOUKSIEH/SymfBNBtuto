@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Ad;
 use Faker\Factory;
+use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\Image;
 use Cocur\Slugify\Slugify;
@@ -18,12 +19,27 @@ class AppFixtures extends Fixture
     public function __construct(UserPasswordEncoderInterface $encoder){
         $this->encoder = $encoder;
     }
-    
+     
     public function load(ObjectManager $manager)
     {
         // $product = new Product();
         // $manager->persist($product);
         $faker = Factory::create('fr_FR');
+
+        $adminRole = new Role();
+        $adminRole->setTitle('ROLE_ADMIN');
+        $manager->persist($adminRole);
+        
+        $adminUser = new User();
+        $adminUser->setFirstName('Douksieh')
+                  ->setLastName('Isman')
+                  ->setEmail('douksieh@symfony.com')
+                  ->setHash($this->encoder->encodePassword($adminUser, 'password'))
+                  ->setPicture('https://avatars.io/twitter/LiiorC')
+                  ->setIntroduction($faker->sentence())
+                  ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(3)) . '</p>')
+                  ->addUserRole($adminRole);
+        $manager->persist($adminUser);
       
         // Nous gérons les utilisateurs
         $users = [];
