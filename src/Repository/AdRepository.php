@@ -19,22 +19,45 @@ class AdRepository extends ServiceEntityRepository
         parent::__construct($registry, Ad::class);
     }
 
-    // /**
-    //  * @return Ad[] Returns an array of Ad objects
-    //  */
-    /*
-    public function findByExampleField($value)
+     /**
+     * @return Ad[] Returns an array of Ad objects
+    */
+   
+    public function findAllAds($term)
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+           // ->andWhere('a.exampleField = :val')
+          //  ->setParameter('val', $value)
+            ->andWhere('a.slug LIKE :searchTerm OR a.title LIKE :searchTerm')
+            ->setParameter('searchTerm', $term.'%')
+            ->orderBy('a.id', 'DESC')
+            ->setMaxResults(6)
             ->getQuery()
             ->getResult()
         ;
     }
+     /**
+     * @return Ad[] Returns an array of Ad objects
     */
+    public function findAllAD(): array
+    {
+    $conn = $this->getEntityManager()->getConnection();
+
+    $sql = '
+        SELECT * 
+        FROM Ad p
+        JOIN User as u
+        ON  u.id = p.author_id
+        ORDER BY p.id DESC
+        LIMIT 6
+        ';
+    $stmt = $conn->prepare($sql);
+   $stmt->execute();
+
+    // returns an array of arrays (i.e. a raw data set)
+    return $stmt->fetchAll();
+    }
+   
 
     /*
     public function findOneBySomeField($value): ?Ad

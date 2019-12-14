@@ -20,8 +20,12 @@ class AdController extends AbstractController
     */
     public function index(AdRepository $repo)
     {
-      
-        $ads = $repo->findAll();
+
+
+     $ads = $repo->findAll();
+        //$ads = $repo->findAllAD();
+
+      //  dd($ads);
         return $this->render('ad/index.html.twig', [
             'ads' => $ads
         ]);
