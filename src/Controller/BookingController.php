@@ -9,10 +9,10 @@ use App\Form\CommentType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class BookingController extends Controller
+class BookingController extends AbstractController
 {
     /**
      * @Route("/ads/{slug}/book", name="booking_create")
@@ -58,22 +58,22 @@ class BookingController extends Controller
      * @return Response
      */
     public function show(Booking $booking, Request $request, ObjectManager $manager) {
-        //$comment = new Comment();
-        // $form = $this->createForm(CommentType::class, $comment);
-        // $form->handleRequest($request);
-        // if($form->isSubmitted() && $form->isValid()) {
-        //     $comment->setAd($booking->getAd())
-        //             ->setAuthor($this->getUser());
-        //     $manager->persist($comment);
-        //     $manager->flush();
-        //     $this->addFlash(
-        //         'success',
-        //         "Votre commentaire a bien été pris en compte !"
-        //     );
-        // }
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            $comment->setAd($booking->getAd())
+                    ->setAuthor($this->getUser());
+            $manager->persist($comment);
+            $manager->flush();
+            $this->addFlash(
+                'success',
+                "Votre commentaire a bien été pris en compte !"
+            );
+        }
         return $this->render('booking/show.html.twig', [
-            'booking' => $booking
-            //'form'    => $form->createView()
+            'booking' => $booking,
+            'form'    => $form->createView()
         ]);
     }
     
